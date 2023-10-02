@@ -23,7 +23,7 @@ Now within the following code, we are able to visually see how drastically the l
 
 I noticed that decreasing the number of epochs also would cause issues displaying why our current value is ideal in this scenario. We can also see that we are able to accurately get the value of 100 pounds which is 45.3592
 
-To conclude we are finally able to see our weight which is 4535916 which is  equivalent to 0.453592 which is the value of when we convert 1 pound to 1 kilogram. this demonstrated our neural network was able to get an accurate weight since 1 pd is 0.453592 . Our Bias is as close to 0 since there is no additional bias present in this conversion formula. What we have demonstrated is a clear understanding of how to create this network and an understanding what occurs throughout this process.
+To conclude we are finally able to see our weight which is 4535916 which is  equivalent to 0.453592 which is the value of when we convert 1 pound to 1 kilogram. this demonstrated our neural network was able to get an accurate weight since 1 pd is 0.453592. Our Bias is as close to 0 since there is no additional bias present in this conversion formula. What we have demonstrated is a clear understanding of how to create this network and an understanding of what occurs throughout this process.
 ![image](https://github.com/DebuggingaHopper/capitol_app_Git/assets/49813790/a514e5be-5092-4e98-8ac7-dd3fe9b0643a)
 
 
