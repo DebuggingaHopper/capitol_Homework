@@ -137,3 +137,99 @@ These are the layer variables: [array([[0.4535916]], dtype=float32), array([6.14
 
 
 
+## HW 2
+
+First to construct the model I created a call back based on previous experiments with the same model, and then contruct the training and testing data
+
+```python
+import numpy as np
+import matplotlib.pyplot as plt
+import tensorflow as tf
+from sklearn.metrics import classification_report,confusion_matrix
+from tensorflow.keras.optimizers import Adam
+from tensorflow.keras.layers import Input, Dense, Flatten, Dropout
+from tensorflow.keras.models import Model
+from tensorflow.keras.regularizers import l2
+
+
+class myCallback(tf.keras.callbacks.Callback):
+  def on_epoch_end(self,epoch,logs={}):
+    if(logs.get('accuracy')>=0.88):
+      print("\nReaced 88% accuracy so cancelling training!")
+      self.model.stop_training=True
+
+
+callbacks_early_stop = myCallback()
+(x_train, y_train), (x_test, y_test) = tf.keras.datasets.fashion_mnist.load_data()
+x_train, x_test = x_train / 255.0, x_test / 255.0
+callbacks_early_stop = myCallback()
+
+
+print("x_train.shape:", x_train.shape)
+```
+
+Then we would need to construct the mode through a gradually increasing complexity, and then compile it with the Adam optimizer with a rate of 0.001
+```Python
+i = Input(shape=x_train[0].shape)
+x = Flatten()(i)
+x = Dense(256, activation='relu')(x)
+x = Dropout(0.3)(x)
+x = Dense(128, activation='relu')(x)
+x = Dropout(0.3)(x)
+x = Dense(10, activation='softmax')(x)
+model = Model(i, x)
+
+# Compile the model
+model.compile(optimizer=Adam(learning_rate=0.001),
+              loss='sparse_categorical_crossentropy',
+              metrics=['accuracy'])
+```
+
+Then we would then train the model through 10 epochs
+```Python
+
+# Train the model
+history = model.fit(x_train, y_train, validation_data=(x_test, y_test), epochs=10, callbacks=[callbacks_early_stop])
+```
+
+Once we have done that we will then plot the accuracy and loss of the model
+
+```Python
+# Plot accuracy per iteration
+plt.plot(history.history['accuracy'], label='acc')
+plt.plot(history.history['val_accuracy'], label='val_acc')
+plt.legend()
+
+plt.plot(history.history['loss'], label='loss')
+plt.plot(history.history['val_loss'], label='val_loss')
+plt.legend()
+
+```
+
+After we have done that we will then evaluate the model and print a confusion marix 
+```Python
+# Evaluate the model
+print(model.evaluate(x_test, y_test, verbose='False'))
+# Predictions by the model
+p_test =  np.argmax(model.predict(x_test), axis=-1) 
+# model.predict(x_test) > 0.5).astype("int32")
+print(classification_report(y_test,p_test))
+print(confusion_matrix(y_test,p_test))
+```
+
+Finally we will then see which images were  misclassified
+```Python
+
+# Show some misclassified examples
+misclassified_idx = np.where(p_test != y_test)[0]
+i = np.random.choice(misclassified_idx)
+plt.imshow(x_test[i], cmap='gray')
+plt.title("True label: %s Predicted: %s" % (y_test[i], p_test[I]));
+```
+
+
+
+
+
+
+
